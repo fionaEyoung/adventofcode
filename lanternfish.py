@@ -1,28 +1,26 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 infile = 'input.txt'
 init = np.loadtxt(infile, delimiter=',')
 
-fish = init
-
-ndays = 18
+n = 256
 
 def lantern_fish(init, ndays):
 
-    fish = init
-    for d in range(ndays-1):
+    fish = np.zeros(9, dtype=int)
+    for i in range(9):
+        fish[i] = np.sum(init==i)
+
+    for d in range(ndays):
 
         # Check for iminent new fish
-        new_fish = len(fish)-np.count_nonzero(fish)
-        # Decrement counters
-        fish -= 1
-        fish = np.where ( fish == -1, 6, fish )
-        # Add new fish
-        if new_fish:
-            fish = np.append(fish, [8]*new_fish)
+        new_fish = fish[0]
+        # Decrement counters (shift the buckets)
+        fish = np.roll ( fish, -1 )
+        # Add in the fish that just multiplied at 6
+        fish[6] += fish[-1]
 
     return fish
 
-
-print("After 18 days: ", len(lantern_fish(init, 18)))
-print("After 80 days: ", len(lantern_fish(init, 80)))
+print(f"After {n} days: ", sum(lantern_fish(init, n)))
