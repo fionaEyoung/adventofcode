@@ -1,6 +1,6 @@
 import numpy as np
 
-infile = 'example_input.txt'
+infile = 'input.txt'
 
 # Get number of lines
 with open(infile) as f:
@@ -28,8 +28,11 @@ for h in horizontals:
     grid[ min(h[:,0]):max(h[:,0])+1, h[0,1] ] += 1
 
 for d in diagonals:
-    grid[ range( d[0,0], d[1,0]+1, 2*(d[0,0]<d[1,0])-1 ),
-          range( d[0,1], d[1,1]+1, 2*(d[0,1]<d[1,1])-1 )] += 1
+    grid[ range( d[0,0], d[1,0]+(-1)**(d[0,0]>d[1,0]),
+                2*(d[0,0]<d[1,0])-1 ),
+          range( d[0,1], d[1,1]+(-1)**(d[0,1]>d[1,1]),
+                2*(d[0,1]<d[1,1])-1 )
+          ] += 1
 
 print(grid.T)
 print("Number of overlapping points: ", np.count_nonzero(grid>1) )
